@@ -34,6 +34,6 @@ async def on_message(message):
         return
 
     if message.content == ("voice/test"):
-        test_speech(client)
+        await test_speech(client)
         
 client.run(DISCORD_TOKEN)
