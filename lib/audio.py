@@ -3,10 +3,9 @@ import subprocess
 from hashlib import md5
 import sys
 from os import path
+DIR = path.realpath(path.join(path.dirname(path.realpath(__file__)), '../audios'))
 
-DIR = 'audios'
-
-def jtalk(text):
+def generate_wav(text):
     fname = md5(text.encode('utf-8')).hexdigest()
     fpath = path.join(DIR, fname + '.wav')
     u"""
@@ -25,10 +24,10 @@ def jtalk(text):
     c.stdin.write(text.encode('utf-8'))
     c.stdin.close()
     c.wait()
-    #  aplay = ['aplay', '-q', fpath+'.wav']
-    #  wr = subprocess.Popen(aplay)
     return fpath
 
 if __name__ == '__main__':
     text = sys.argv[1]
-    jtalk (text)
+    fpath = generate_wav(text)
+    #  aplay = ['afplay', '-q', fpath+'.wav']
+    #  wr = subprocess.Popen(aplay)
