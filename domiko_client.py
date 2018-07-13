@@ -1,5 +1,6 @@
 import os
 import discord
+from lib import audio
 #  http://discordpy.readthedocs.io/en/latest/
 
 client = discord.Client()
@@ -19,13 +20,20 @@ async def on_ready():
     await test_speech(client)
 
 
-async def test_speech(c):
+async def test_speech(c, text=None):
     for v in c.voice_clients:
         if v.channel.id == VOICE_CHATROOM_ID:
             print('player started')
-            player = v.create_ffmpeg_player('audios/tes.mp3')
+            if text:
+                fpath = audio.jtalk(text)
+                print(text)
+            else:
+                fpath = 'audios/tes.mp3'
+
+            player = v.create_ffmpeg_player(fpath)
             player.start()
             print('player finished')
+
 
 
 @client.event
@@ -35,5 +43,9 @@ async def on_message(message):
 
     if message.content == ("voice/test"):
         await test_speech(client)
-        
+
+    if message.content.startswith("voice/say"):
+        text = message.content.split(' ')[-1]
+        await test_speech(client, text)
+
 client.run(DISCORD_TOKEN)
