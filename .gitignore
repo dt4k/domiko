@@ -1,2 +1,5 @@
 run_with_secret.sh
 audios/*
+*.DS_Store
+*.pyc
+*__pycache__/*
