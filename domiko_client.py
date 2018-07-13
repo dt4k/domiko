@@ -1,5 +1,5 @@
 import os
-import discord 
+import discord
 #  http://discordpy.readthedocs.io/en/latest/
 from lib import audio
 
@@ -13,9 +13,11 @@ async def join_voice_channel(channel_id):
     voice = await client.join_voice_channel(client.get_channel(channel_id))
     return voice
 
+
 @client.event
 async def on_ready():
-    print('Process is launched. Logged in as %s(%s)' %(client.user.name, client.user.id))
+    print('Process is launched. Logged in as %s(%s)' %
+          (client.user.name, client.user.id))
     await join_voice_channel(VOICE_CHATROOM_ID)
     await test_speech(client)
 
@@ -27,9 +29,11 @@ async def test_speech(c, text='こんにちは!'):
             fpath = audio.generate_wav(text)
             print(text)
 
-            player = v.create_ffmpeg_player(fpath, after=lambda : os.remove(fpath))
+            player = v.create_ffmpeg_player(
+                fpath, after=lambda: os.remove(fpath))
             player.start()
             print('player finished')
+
 
 @client.event
 async def on_message(message):
