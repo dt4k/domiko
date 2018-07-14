@@ -7,7 +7,9 @@ DIR = path.realpath(path.join(path.dirname(
     path.realpath(__file__)), '../audios'))
 
 
-def generate_wav(text, mechpath='/var/lib/mecab/dic/open-jtalk/naist-jdic', htsvoicepath='/usr/share/hts-voice/mei/mei_happy.htsvoice'):
+def generate_wav(text, 
+        mechpath='/var/lib/mecab/dic/open-jtalk/naist-jdic', 
+        htsvoicepath='/usr/share/hts-voice/mei/mei_happy.htsvoice'):
 
     fname = md5(text.encode('utf-8')).hexdigest()
     fpath = path.join(DIR, fname + '.wav')
