@@ -1,50 +1,32 @@
 import os
 import discord
+import asyncio
 #  http://discordpy.readthedocs.io/en/latest/
-from lib import audio
+from lib import discord_helper
 
-
-client = discord.Client()
 DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
 VOICE_CHATROOM_ID = os.environ['VOICE_CHATROOM_ID']
+GENERAL_CHANNEL_ID = os.environ['GENERAL_CHANNEL_ID']
 
-async def join_voice_channel(channel_id):
-    print('joined to %s' % channel_id)
-    voice = await client.join_voice_channel(client.get_channel(channel_id))
-    return voice
-
+client = discord.Client()
+helper = discord_helper.DiscordHelper(client, VOICE_CHATROOM_ID)
 
 @client.event
 async def on_ready():
     print('Process is launched. Logged in as %s(%s)' %
           (client.user.name, client.user.id))
-    await join_voice_channel(VOICE_CHATROOM_ID)
-    await test_speech(client)
-
-
-async def test_speech(c, text='こんにちは!'):
-    for v in c.voice_clients:
-        if v.channel.id == VOICE_CHATROOM_ID:
-            print('player started')
-            fpath = audio.generate_wav(text)
-            print(text)
-
-            player = v.create_ffmpeg_player(
-                fpath, after=lambda: os.remove(fpath))
-            player.start()
-            print('player finished')
-
+    channel = client.get_channel(VOICE_CHATROOM_ID)
+    # join to the voice channel
+    await client.join_voice_channel(channel)
+    print('joined to %s' % VOICE_CHATROOM_ID)
+    await helper.speech('こんにちは！')
+    while(await helper.get_game_status() in ('running', 'finished')):
+        print('start pooling for status')
+        await helper.sitrep(client.get_channel(GENERAL_CHANNEL_ID))
+        await asyncio.sleep(60)
 
 @client.event
 async def on_message(message):
-    if message.author.bot:
-        return
-
-    if message.content == ("test"):
-        await test_speech(client)
-
-    if message.content.startswith("say "):
-        text = message.content.split(' ')[-1]
-        await test_speech(client, text)
+    await helper.handle_message(message)
 
 client.run(DISCORD_TOKEN)
