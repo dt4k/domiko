@@ -5,7 +5,6 @@ from lib import discord_helper
 
 DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
 VOICE_CHATROOM_ID = os.environ['VOICE_CHATROOM_ID']
-BLYNK_TOKEN = os.environ['BLYNK_TOKEN']
 
 client = discord.Client()
 helper = discord_helper.DiscordHelper(client, VOICE_CHATROOM_ID)

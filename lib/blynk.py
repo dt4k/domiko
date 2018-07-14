@@ -1,13 +1,12 @@
-from os import path
+from os import path, environ
 import json
 import requests
-
 
 class BlynkClient(object):
     HOST = 'http://blynk-cloud.com'
     HEADERS = {'Content-Type': 'application/json'}
 
-    def __init__(self, token):
+    def __init__(self, token=environ.get('BLYNK_TOKEN')):
         self._token = token
 
     def _uri(self, *args):
