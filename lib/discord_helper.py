@@ -31,7 +31,8 @@ class DiscordHelper(object):
             return '%d分%d秒' % (m, s)
 
 
-    def _translate_status(self, status):
+    async def get_game_status(self):
+        status = await self.game.status()
         statuses = {
                 '0': 'notstarted',
                 '1': 'running',
@@ -43,12 +44,11 @@ class DiscordHelper(object):
         else:
             return 'unknown'
 
-    async def sitrep(self, message):
+    async def sitrep(self, channel):
         timer = await self.game.timer()
         red_score = await self.game.red_score()
         yellow_score = await self.game.yellow_score()
-        status = self._translate_status(await self.game.status())
-
+        status = await self.get_game_status()
         
         if status == 'finished':
             text = "先ほどのゲームは，レッドチームは{}点，イエロチームは{}点。".format(red_score, yellow_score)
@@ -73,7 +73,7 @@ class DiscordHelper(object):
             if all([ v is None for v in dominated.values()]):
                 text += 'どの拠点もまだ占拠されていません。'
 
-        await self._client.send_message(message.channel, text)
+        await self._client.send_message(channel, text)
         await self.speech(text)
 
     async def game_start(self, message):
@@ -121,6 +121,6 @@ class DiscordHelper(object):
                 await asyncio.sleep(3)
                 return await self.game.reset()
             elif command == 'sitrep':
-                await self.sitrep(message)
+                await self.sitrep(message.channel)
             else:
                 print('unknown command given: %s' % command)
