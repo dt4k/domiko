@@ -30,10 +30,13 @@ class GameClient(object):
         return self.blynk.get_pin(self.pins['timer'])
 
     async def start(self):
+        print('game starting')
         return self.blynk.put_pin(self.pins['start'], '1')
     async def pause(self):
+        print('game pause')
         return self.blynk.put_pin(self.pins['pause'], '1')
     async def reset(self):
+        print('game reset')
         return self.blynk.put_pin(self.pins['pause'], '1')
     async def red_score(self):
         return self.blynk.get_pin(self.pins['red']['score'])
