@@ -1,5 +1,6 @@
 import os
 import time
+import asyncio
 from lib import audio, game_client
 
 class DiscordHelper(object):
@@ -31,12 +32,33 @@ class DiscordHelper(object):
 
 
 
-    async def sitrep(self):
+    async def sitrep(self, message):
         timer = await self.game.timer()
         red_score = await self.game.red_score()
         yellow_score = await self.game.yellow_score()
         text = "残り時間は，{}。レッドチームは{}点，イエロチームは{}点です。".format(self._parse_timer(timer), red_score, yellow_score)
+
+        await self._client.send_message(message.channel, text)
         await self.speech(text)
+
+    async def game_start(self, message):
+        # TODO: fix these messy synchronous procedure
+        await self.speech('ゲームを開始します。開始5秒前')
+        await asyncio.sleep(3)
+        await self.speech('5')
+        await asyncio.sleep(1)
+        await self.speech('4')
+        await asyncio.sleep(1)
+        await self.speech('3')
+        await asyncio.sleep(1)
+        await self.speech('2')
+        await asyncio.sleep(1)
+        await self.speech('1')
+        await asyncio.sleep(1)
+        await self.speech('ゲームスタート!')
+        await self._client.send_message(message.channel, 'ゲームスタート!')
+        return await self.game.start()
+
 
     async def handle_message(self, message):
         if message.author.bot:
@@ -48,15 +70,22 @@ class DiscordHelper(object):
             await self.speech(text)
 
         elif message.content.startswith("command "):
-            cmd = message.content.split(' ')[-1]
-            commands = {
-                'start': self.game.start,
-                'pause': self.game.pause,
-                'reset': self.game.reset,
-                'sitrep': self.sitrep
-             }
-            if cmd in commands:
-                return await commands[cmd]()
+            command = message.content.split(' ')[-1]
+            if command == 'start':
+                await self.game_start(message)
+            elif command == 'pause':
+                text = 'ゲームを中断します'
+                await self.speech(text)
+                await self._client.send_message(message.channel, text)
+                await asyncio.sleep(3)
+                return await self.game.pause()
+            elif command == 'reset':
+                text = 'ゲームをリセットします'
+                await self.speech(text)
+                await self._client.send_message(message.channel, text)
+                await asyncio.sleep(3)
+                return await self.game.reset()
+            elif command == 'sitrep':
+                await self.sitrep(message)
             else:
-                print('unknown command given: %s' % cmd)
-
+                print('unknown command given: %s' % command)
