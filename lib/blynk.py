@@ -10,7 +10,7 @@ class BlynkClient(object):
         self._token = token
 
     def _uri(self, *args):
-        return path.join(self.HOST, self._token, *args)
+        return path.join(str(self.HOST), str(self._token), *args)
 
     def get_pin(self, pin):
         res = requests.get(self._uri('get', pin))

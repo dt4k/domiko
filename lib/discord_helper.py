@@ -31,12 +31,47 @@ class DiscordHelper(object):
             return '%d分%d秒' % (m, s)
 
 
+    def _translate_status(self, status):
+        statuses = {
+                '0': 'notstarted',
+                '1': 'running',
+                '2': 'paused',
+                '3': 'finished'
+         }
+        if status in statuses:
+            return statuses[status]
+        else:
+            return 'unknown'
 
     async def sitrep(self, message):
         timer = await self.game.timer()
         red_score = await self.game.red_score()
         yellow_score = await self.game.yellow_score()
-        text = "残り時間は，{}。レッドチームは{}点，イエロチームは{}点です。".format(self._parse_timer(timer), red_score, yellow_score)
+        status = self._translate_status(await self.game.status())
+
+        
+        if status == 'finished':
+            text = "先ほどのゲームは，レッドチームは{}点，イエロチームは{}点。".format(red_score, yellow_score)
+            if red_score > yellow_score:
+                text += 'レッドチームの勝利です！'
+            elif red_score < yellow_score:
+                text += 'イエローチームの勝利です！'
+            else:
+                text += '両チーム引き分けです。'
+        elif status == 'running':
+            dominated = {
+                'アルファ': await self.game.alpha(),
+                'ブラボー': await self.game.bravo(),
+                'チャーリー': await self.game.charlie()
+            }
+
+            text = "残り時間は，{}。レッドチームは{}点，イエロチームは{}点です。".format(self._parse_timer(timer), red_score, yellow_score)
+            for (objective, description) in dominated.items():
+                if description:
+                    text += objective + 'は' + description
+
+            if all([ v is None for v in dominated.values()]):
+                text += 'どの拠点もまだ占拠されていません。'
 
         await self._client.send_message(message.channel, text)
         await self.speech(text)

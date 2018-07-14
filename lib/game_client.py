@@ -6,6 +6,7 @@ class GameClient(object):
 
     def __init__(self, token=environ.get('BLYNK_TOKEN')):
         self.pins = {
+            'status': 'v8',
             'timer': 'v0',
             'start': 'v20',
             'pause': 'v12',
@@ -25,6 +26,36 @@ class GameClient(object):
         }
         self.blynk = blynk.BlynkClient(token)
 
+    async def alpha(self):
+        red = await self.red_alpha() == '255'
+        yellow = await self.yellow_alpha() == '255'
+        if red:
+            return 'レッドチームが占拠しています。'
+        
+        elif yellow:
+            return 'イエローチームが占拠しています。'
+        else:
+            return None
+
+    async def bravo(self):
+        red = await self.red_bravo() == '255'
+        yellow = await self.yellow_bravo() == '255'
+        if red:
+            return 'レッドチームが占拠しています。'
+        elif yellow:
+            return 'イエローチームが占拠しています。'
+        else:
+            return None
+
+    async def charlie(self):
+        red = await self.red_charlie() == '255'
+        yellow = await self.yellow_charlie() == '255'
+        if red:
+            return 'レッドチームが占拠しています。'
+        elif yellow:
+            return 'イエローチームが占拠しています。'
+        else:
+            return None
 
     async def timer(self):
         return self.blynk.get_pin(self.pins['timer'])
@@ -35,6 +66,9 @@ class GameClient(object):
     async def pause(self):
         print('game pause')
         return self.blynk.put_pin(self.pins['pause'], '1')
+    async def status(self):
+        return self.blynk.get_pin(self.pins['status'])
+
     async def reset(self):
         print('game reset')
         return self.blynk.put_pin(self.pins['pause'], '1')
