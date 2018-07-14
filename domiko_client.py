@@ -20,8 +20,7 @@ async def on_ready():
     await client.join_voice_channel(channel)
     print('joined to %s' % VOICE_CHATROOM_ID)
     await helper.speech('こんにちは！')
-
-    while(await helper.get_game_status() == 'running'):
+    while(await helper.get_game_status() in ('running', 'finished')):
         print('start pooling for status')
         await helper.sitrep(client.get_channel(GENERAL_CHANNEL_ID))
         await asyncio.sleep(60)
