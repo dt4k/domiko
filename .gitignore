@@ -1,4 +1,5 @@
-run_with_secret.sh
+bin/run_local.sh
+bin/run_docker.sh
 audios/*
 *.DS_Store
 *.pyc
