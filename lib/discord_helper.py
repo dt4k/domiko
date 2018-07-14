@@ -1,4 +1,5 @@
 import os
+import time
 from lib import audio, game_client
 
 class DiscordHelper(object):
@@ -19,11 +20,22 @@ class DiscordHelper(object):
                 player.start()
                 print('player finished')
 
+    def _parse_timer(self, timer):
+        t = time.strptime(timer, '%M:%S')
+        m = t.tm_min
+        s = t.tm_sec
+        if m < 1:
+            return '%d秒' % s
+        else:
+            return '%d分%d秒' % (m, s)
+
+
+
     async def sitrep(self):
         timer = await self.game.timer()
         red_score = await self.game.red_score()
         yellow_score = await self.game.yellow_score()
-        text = "残り時間{}。レッドチームは{}点，イエロチームは{}点です。".format(timer, red_score, yellow_score)
+        text = "残り時間は，{}。レッドチームは{}点，イエロチームは{}点です。".format(self._parse_timer(timer), red_score, yellow_score)
         await self.speech(text)
 
     async def handle_message(self, message):
