@@ -16,6 +16,10 @@ class BlynkClient(object):
         res = requests.get(self._uri('get', pin))
         return res.json().pop()
 
+    def is_hardware_connected(self):
+        res = requests.get(self._uri('isHardwareConnected'))
+        return res.json() #true/false
+
     def put_pin(self, pin, val):
         data = [val]
         res = requests.put(

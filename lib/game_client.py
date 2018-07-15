@@ -88,3 +88,5 @@ class GameClient(object):
         return self.blynk.get_pin(self.pins['yellow']['bravo'])
     async def yellow_charlie(self):
         return self.blynk.get_pin(self.pins['yellow']['charlie'])
+    async def is_hardware_connected(self):
+        return self.blynk.is_hardware_connected()
