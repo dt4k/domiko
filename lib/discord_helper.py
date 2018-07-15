@@ -94,6 +94,8 @@ class DiscordHelper(object):
         await self._client.send_message(message.channel, 'ゲームスタート!')
         return await self.game.start()
 
+    async def is_hardware_connected(self):
+        return await self.game.is_hardware_connected() 
 
     async def handle_message(self, message):
         if message.author.bot:
