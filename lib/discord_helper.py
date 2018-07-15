@@ -69,7 +69,7 @@ class DiscordHelper(object):
             if red_score> yellow_score:
                 text += "レッドが勝っています。"
             if red_score < yellow_score:
-                text += "レッドが勝っています。"
+                text += "イエローが勝っています。"
             if red_score == yellow_score:
                 text += "両チーム引き分けです。"
 
