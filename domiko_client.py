@@ -22,9 +22,9 @@ async def on_ready():
     await helper.speech('こんにちは！')
     while(True):
         print('start polling for status')
-        if (await helper.get_game_status() in ('running', 'finished')) and await helper.is_hardware_connected():
+        if (await helper.get_game_status() in ('running', 'finished')):
             await helper.sitrep(client.get_channel(GENERAL_CHANNEL_ID))
-        await asyncio.sleep(60)
+        await asyncio.sleep(20)
 
 @client.event
 async def on_message(message):

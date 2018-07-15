@@ -65,7 +65,14 @@ class DiscordHelper(object):
                 'チャーリー': await self.game.charlie()
             }
 
-            text = "残り時間は，{}。レッドチームは{}点，イエロチームは{}点です。".format(self._parse_timer(timer), red_score, yellow_score)
+            text = "残り時間，{}。レッド, {}点，イエロー{}点。".format(self._parse_timer(timer), red_score, yellow_score)
+            if red_score> yellow_score:
+                text += "レッドが勝っています。"
+            if red_score < yellow_score:
+                text += "レッドが勝っています。"
+            if red_score == yellow_score:
+                text += "両チーム引き分けです。"
+
             for (objective, description) in dominated.items():
                 if description:
                     text += objective + 'は' + description
