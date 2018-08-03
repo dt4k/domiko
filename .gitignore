@@ -1,6 +1,6 @@
 bin/run_local.sh
 bin/run_docker.sh
-audios/*
+audios/*.wav
 *.DS_Store
 *.pyc
 *__pycache__/*
