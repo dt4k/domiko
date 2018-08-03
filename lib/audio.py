@@ -9,10 +9,13 @@ DIR = path.realpath(path.join(path.dirname(
 
 def generate_wav(text, 
         mechpath='/var/lib/mecab/dic/open-jtalk/naist-jdic', 
-        htsvoicepath='/usr/share/hts-voice/mei/mei_happy.htsvoice'):
+        htsvoicepath='/usr/share/hts-voice/mei/mei_happy.htsvoice',
+        fpath=None
+        ):
 
-    fname = md5(text.encode('utf-8')).hexdigest()
-    fpath = path.join(DIR, fname + '.wav')
+    if not fpath:
+        fname = md5(text.encode('utf-8')).hexdigest()
+        fpath = path.join(DIR, fname + '.wav')
     u"""
     日本語テキストから音声合成wavファイルを生成.
 
@@ -33,8 +36,7 @@ def generate_wav(text,
 
 if __name__ == '__main__':
     text = sys.argv[1]
-    mechpath = '/usr/local/Cellar/open-jtalk/1.10_1/dic'
-    htsvoicepath = '/usr/local/Cellar/open-jtalk/1.10_1/voice/mei/mei_happy.htsvoice'
-    fpath = generate_wav(text, mechpath, htsvoicepath)
+    fpath = generate_wav(text, fpath=path.join(DIR, text + '.wav'))
+
     #  aplay = ['afplay', '-q', fpath+'.wav']
     #  wr = subprocess.Popen(aplay)

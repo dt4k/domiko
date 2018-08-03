@@ -13,3 +13,13 @@ docker run -it --rm \
   -e BLYNK_TOKEN=${token_for_your_blynk_app} \
   dtak1114/domiko:latest
 ```
+
+# Just generate audio as file
+
+```
+./bin/generate_audio.sh ${word}
+```
+
+Generated audios are located in host's `audios` dir.
+
+
